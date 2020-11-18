@@ -19,7 +19,7 @@ var limit int
 var fname string
 
 func main() {
-	fmt.Println(aurora.BgBlack(aurora.Cyan("Crafted with")) , fmt.Sprintf("🤍 by") ,aurora.BgBlack(aurora.BrightCyan("Zeron")))
+	fmt.Println(aurora.BgBlack(aurora.Cyan("Crafted with")) , fmt.Sprintf("🤍"), aurora.BgBlack(aurora.Cyan("by")) ,aurora.BgBlack(aurora.BrightCyan("Zeron")))
 	var cpath string
 	flag.StringVar(&cpath, "cpath", "", "Absolute path of the file containing cnames")
 	var w string
