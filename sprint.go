@@ -1,4 +1,4 @@
-
+/* Use it to divide subdomains into text files */
 package main
 
 import (
@@ -7,85 +7,133 @@ import (
 	"fmt"
 	"github.com/logrusorgru/aurora"
 	"os"
+	"path/filepath"
 )
 
-var aRay []string
+var twoDslice [][]string
 
-func main()  {
+var subDomains []string
 
-	flag.Usage = func() {
-		fmt.Println("Example:\n\ttwim base.txt file2.txt file3.txt ...\n\tUse 'twim -s' for silent mode")
-	}
 
-	var s bool
-	flag.BoolVar(&s, "s", false, "Silent mode")
+/*var limit = 5000
+var alldomains = "D:\\goland installed files\\awesomeProject\\emails.txt"
+var writepath = "D:\\goland installed files\\awesomeProject\\texts"*/
+
+var alldomains string
+var writepath string
+var limit int
+var fname string
+
+func main() {
+	fmt.Println(aurora.BgBlack(aurora.Cyan("Crafted with")) , fmt.Sprintf("🤍"), aurora.BgBlack(aurora.Cyan("by")) ,aurora.BgBlack(aurora.BrightCyan("Rewinter")))
+	var cpath string
+	flag.StringVar(&cpath, "cpath", "", "Absolute path of the file containing cnames")
+	var w string
+	flag.StringVar(&w, "w", "","The absolute path of where split files will be created")
+	var chunk int
+	flag.IntVar(&chunk, "chunk", 0, "Count of cnames each file will contain (except last one)")
+	var filename string
+	flag.StringVar(&filename, "filename", "", "This name is gonna be used for created files with numbers added on right incrementally")
+
+
+
 	flag.Parse()
 
-	if flag.NArg() <= 0 {
-		flag.Usage()
-		os.Exit(2)
+	if cpath != "" {
+		alldomains = cpath
+	}
+	if w != "" {
+		writepath = w
+	}
+	if chunk != 0 {
+		limit = chunk
+	}
+	if filename != "" {
+		fname = filename
 	}
 
-	xp := flag.Args()
-	w := xp[0]
-	x := xp[0:]
-
-	if len(xp) <= 0 {
-		flag.Usage()
-		os.Exit(2)
-	} else {
-
-		file, err := os.Open(w)
-		if err != nil {
-			fmt.Println("Something went wrong while opening the first file")
-		}
-		defer file.Close()
-
-		scan := bufio.NewScanner(file)
-		for scan.Scan() {
-			aRay = append(aRay, scan.Text())
-		}
 
 
-		ff, err := os.OpenFile(w, os.O_APPEND|os.O_WRONLY, 0600)
 
-		if err != nil {
-			fmt.Println(aurora.BrightRed("Can't open file to write"))
-		}
-		defer file.Close()
+	file, err := os.Open(alldomains)
+	errcheck(err)
 
+	defer file.Close()
 
-		for _, gFile := range x {
-			fl, err := os.Open(gFile)
-			if err != nil {
-				fmt.Println(aurora.BrightRed("Can't open file provided to read from"))
-			}
-
-			scan := bufio.NewScanner(fl)
-			for scan.Scan() {
-				st := scan.Text()
-				if stringInSlice(st, aRay) == false {
-
-					aRay = append(aRay, st)
-					_, err = ff.WriteString("\n" + st)
-					if !s {
-						fmt.Println(st)
-					}
-				}
-
-			}
-		}
+	x := bufio.NewScanner(file)
+	for x.Scan() {
+		subDomains = append(subDomains, x.Text())
 	}
+	xe := 0
+	for i := 0; i <len(subDomains); i += limit {
+		batch := subDomains[i:min(i+limit, len(subDomains))]
+		twoDslice = append(twoDslice, batch)
+		xe ++
+		//fmt.Println(xe, batch)
+	}
+
+	fileCount := len(subDomains)/limit
+
+
+
+	fmt.Println("8 files should be created")
+	files_to_create(fileCount + 1, writepath)
+	subDWriter(fileCount + 1, writepath)
 
 }
 
 
 
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
+
+func files_to_create(count int, path string)  {
+
+	for i := 1; i <= count; i ++ {
+		file, err := os.Create(filepath.Join(path, fmt.Sprintf("%v%v.txt", fname, i)))
+		errcheck(err)
+
+		defer file.Close()
+
 	}
-	return false
+	fmt.Println("creating...")
+
+}
+
+
+func subDWriter(count int, path string)  {
+	sc := 0
+	/*for a, x := range twoDslice{
+		fmt.Println(a, x)
+	}*/
+
+	for i := 1; i <= count; i ++ {
+		xpath := filepath.Join(writepath, fmt.Sprintf("%v%v.txt", fname, i))
+
+		file, err := os.OpenFile(xpath, os.O_RDWR, 0644)
+		errcheck(err)
+		//fmt.Println("split")
+		for _, x := range twoDslice[sc] {
+			_, _ = file.WriteString(x+"\n")
+		}
+		sc ++
+	}
+	fmt.Println("Done! GG haxor ;)")
+}
+
+
+func errcheck(e error) {
+	if e != nil {
+		//panic(e)
+		fmt.Println("⚠ All flags must be set. Be sure to set them correctly")
+		flag.PrintDefaults()
+
+		os.Exit(10)
+	}
+}
+
+
+func min(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
 }
