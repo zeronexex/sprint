@@ -4,17 +4,17 @@ Say you have a file with 50k CNAMES and for some reason you want to split those 
 # Installation
 You have to have Go installed in your machine
 
-`go get github.com/zeronexex/sprint`
+`go get github.com/rew1nter/sprint`
 
 # Update
 
-`go get -u github.com/zeronexex/sprint`
+`go get -u github.com/rew1nter/sprint`
 
 # Usage 
 
 `splityet -h`
 
-Crafted with 💜 by Zeron
+Crafted with 💜 by Rewinter
 
 `⚠ All flags must be set. Be sure to set them correctly`
    
