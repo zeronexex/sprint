@@ -12,7 +12,7 @@ You have to have Go installed in your machine
 
 # Usage 
 
-`splityet -h`
+`sprint -h`
 
 Crafted with 💜 by Rewinter
 
