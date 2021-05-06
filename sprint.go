@@ -16,9 +16,7 @@ var twoDslice [][]string
 var subDomains []string
 
 
-/*var limit = 5000
-var alldomains = "D:\\goland installed files\\awesomeProject\\emails.txt"
-var writepath = "D:\\goland installed files\\awesomeProject\\texts"*/
+
 
 var alldomains string
 var writepath string
@@ -26,7 +24,7 @@ var limit int
 var fname string
 
 func main() {
-	fmt.Println(aurora.Cyan("Crafted with") , fmt.Sprintf("🤍"), aurora.BgBlack(aurora.Cyan("by")) ,aurora.BrightCyan("Rewinter"))
+	fmt.Println(aurora.Cyan("Crafted with") , "🤍", aurora.Cyan("by") ,aurora.BrightWhite("Rewinter"))
 	var cpath string
 	flag.StringVar(&cpath, "cpath", "", "Absolute path of the file containing cnames")
 	var w string
