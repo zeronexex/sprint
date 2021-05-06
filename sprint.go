@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/logrusorgru/aurora"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -25,7 +26,7 @@ var limit int
 var fname string
 
 func main() {
-	fmt.Println(aurora.BgBlack(aurora.Cyan("Crafted with")) , fmt.Sprintf("🤍"), aurora.BgBlack(aurora.Cyan("by")) ,aurora.BgBlack(aurora.BrightCyan("Rewinter")))
+	fmt.Println(aurora.Cyan("Crafted with") , fmt.Sprintf("🤍"), aurora.BgBlack(aurora.Cyan("by")) ,aurora.BrightCyan("Rewinter"))
 	var cpath string
 	flag.StringVar(&cpath, "cpath", "", "Absolute path of the file containing cnames")
 	var w string
@@ -72,13 +73,13 @@ func main() {
 		//fmt.Println(xe, batch)
 	}
 
-	fileCount := len(subDomains)/limit
+	fileCount := len(twoDslice)
 
 
 
-	fmt.Println("8 files should be created")
-	files_to_create(fileCount + 1, writepath)
-	subDWriter(fileCount + 1, writepath)
+	fmt.Printf("%v files should be created\n", fileCount)
+	files_to_create(fileCount, writepath)
+	subDWriter(fileCount, writepath)
 
 }
 
@@ -87,11 +88,12 @@ func main() {
 
 func files_to_create(count int, path string)  {
 
-	for i := 1; i <= count; i ++ {
+	for i := 0; i < count; i ++ {
 		file, err := os.Create(filepath.Join(path, fmt.Sprintf("%v%v.txt", fname, i)))
-		errcheck(err)
-
 		defer file.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
 
 	}
 	fmt.Println("creating...")
@@ -100,21 +102,20 @@ func files_to_create(count int, path string)  {
 
 
 func subDWriter(count int, path string)  {
-	sc := 0
 	/*for a, x := range twoDslice{
 		fmt.Println(a, x)
 	}*/
 
-	for i := 1; i <= count; i ++ {
-		xpath := filepath.Join(writepath, fmt.Sprintf("%v%v.txt", fname, i))
-
+	for i := 0; i < count; i ++ {
+		xpath := filepath.Join(path, fmt.Sprintf("%v%v.txt", fname, i))
 		file, err := os.OpenFile(xpath, os.O_RDWR, 0644)
-		errcheck(err)
-		//fmt.Println("split")
-		for _, x := range twoDslice[sc] {
-			_, _ = file.WriteString(x+"\n")
+		if err != nil {
+			log.Fatal(err)
 		}
-		sc ++
+		//fmt.Println("split")
+		for _, x := range twoDslice[i] {
+			_, _ = file.WriteString(x + "\n")
+		}
 	}
 	fmt.Println("Done! GG haxor ;)")
 }
