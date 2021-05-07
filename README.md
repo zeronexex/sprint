@@ -12,24 +12,21 @@ You have to have Go installed in your machine
 
 # Usage 
 
-`sprint -h`
+```
+sprint -h
 
-Crafted with 💜 by Rewinter
-
-`⚠ All flags must be set. Be sure to set them correctly`
-   
-    -chunk int
-        
-        Count of cnames each file will contain (except last one)
-  
-    -cpath string
-        
-        Absolute path of the file containing cnames
-  
-    -filename string
-        
-        This name is gonna be used for created files with numbers added on right incrementally
-  
-    -w string
-        
-        The absolute path of where split files will be created
+sprint <flags> <args>
+	flags : 
+		-c int
+			The size of chunks.
+		-fn string
+			This name is will be used for created files with numbers added on right incrementally.
+	args :
+		First argument: is the path where the file you want to split exists
+		Second argument: is the path where new chunked files will be created
+	ex :
+		sprint -c 2 -f raft_small /path/to/file/for/splitting /path/where/new/files/will/be/written
+		sprint -c 10 -f "raft small.txt" /path/to/file/for/splitting /path/where/new/files/will/be/written
+      
+      Crafted with 🤍 by Rewinter
+```
